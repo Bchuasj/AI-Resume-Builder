@@ -65,8 +65,7 @@ export const optimizeResume = async (data: OptimizationRequest): Promise<Optimiz
   try {
     // Use explicit model version to avoid 404s
     const response = await ai.models.generateContent({
-      // using explicit version for stability
-      model: 'gemini-1.5-flash-001',
+      model: 'gemini-1.5-pro',
       contents: { parts },
       config: {
         systemInstruction: systemInstruction,
