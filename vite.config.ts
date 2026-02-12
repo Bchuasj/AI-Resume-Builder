@@ -9,10 +9,13 @@ const __dirname = path.dirname(__filename);
 export default defineConfig(({ mode }) => {
   // Load using Vite's loadEnv. This automatically loads .env, .env.local, .env.[mode], etc.
   const env = loadEnv(mode, process.cwd(), '');
+  // Merge process.env for Vercel support (loadEnv only reads files)
+  const geminiKey = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  const viteGeminiKey = env.VITE_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 
   console.log("DEBUG: VITE ENV LOADED:", {
-    HAS_GEMINI: !!env.GEMINI_API_KEY,
-    HAS_VITE_GEMINI: !!env.VITE_GEMINI_API_KEY
+    geminiKey: !!geminiKey,
+    viteGeminiKey: !!viteGeminiKey
   });
 
   return {
@@ -23,9 +26,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     define: {
       // Polyfill process.env for compatibility
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-      // Also ensure VITE_ var is available if loaded from standard env file
-      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY)
+      'process.env.GEMINI_API_KEY': JSON.stringify(geminiKey),
+      // Ensure VITE_ var is available
+      'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(viteGeminiKey || geminiKey)
     },
     resolve: {
       alias: {
