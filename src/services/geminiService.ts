@@ -119,10 +119,9 @@ export const optimizeResume = async (data: OptimizationRequest): Promise<Optimiz
 
   } catch (error: any) {
     console.error("Gemini API Error:", error);
-    let msg = "Failed to optimize resume.";
-    if (error.message?.includes("400")) {
-      msg += " The file format might not be supported or the content is too large.";
-    }
+    // Include the actual error message for debugging
+    const errorDetails = error.message || error.toString();
+    const msg = `Failed to optimize resume. Details: ${errorDetails}`;
     throw new Error(msg);
   }
 };
