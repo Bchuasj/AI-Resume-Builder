@@ -2,13 +2,15 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { OptimizationRequest, OptimizationResult } from '../types';
 
 export const optimizeResume = async (data: OptimizationRequest): Promise<OptimizationResult> => {
-  // Ensure the API key is available. In Vite, this is replaced at build time or loaded via env.
-  // We use process.env.API_KEY as defined in vite.config.ts
-  if (!process.env.API_KEY) {
-    throw new Error("API Key is missing. Please check your environment configuration.");
+  // Use VITE_ prefix for client-side environment variables, fallback for safety
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
+    console.error("Missing API Key. Checked VITE_GEMINI_API_KEY and GEMINI_API_KEY.");
+    throw new Error("API Key is missing. Please check your .env.local file has VITE_GEMINI_API_KEY defined.");
   }
 
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey });
 
   const systemInstruction = `You are an expert Resume Writer and Career Coach specialized in ATS optimization.
   
