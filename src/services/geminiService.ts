@@ -6,8 +6,15 @@ export const optimizeResume = async (data: OptimizationRequest): Promise<Optimiz
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
-    console.error("Missing API Key. Checked VITE_GEMINI_API_KEY and GEMINI_API_KEY.");
-    throw new Error("API Key is missing. Please check your .env.local file has VITE_GEMINI_API_KEY defined.");
+    console.error("DEBUG: ENV DUMP", {
+      VITE_KEY: !!import.meta.env.VITE_GEMINI_API_KEY,
+      PROCESS_KEY: !!process.env.GEMINI_API_KEY
+    });
+    throw new Error(
+      "API Key is missing.\n" +
+      "- LOCALHOST: Stop the server (Ctrl+C) and run 'npm run dev' again to load the .env file.\n" +
+      "- VERCEL: Go to Project Settings > Environment Variables and add VITE_GEMINI_API_KEY."
+    );
   }
 
   const ai = new GoogleGenAI({ apiKey });

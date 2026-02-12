@@ -7,7 +7,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
+  // Load using Vite's loadEnv. This automatically loads .env, .env.local, .env.[mode], etc.
+  const env = loadEnv(mode, process.cwd(), '');
+
+  console.log("DEBUG: VITE ENV LOADED:", {
+    HAS_GEMINI: !!env.GEMINI_API_KEY,
+    HAS_VITE_GEMINI: !!env.VITE_GEMINI_API_KEY
+  });
+
   return {
     server: {
       port: 3000,
